@@ -31,13 +31,20 @@ gro <- prep_for_lm(allphenos,'Growth', with_log = FALSE)
 #####
 # Total Lasso (glmnet) models (aka. "long") 
 #####
-run_long_lm <- function(df, alpha_val=1){
+run_long_lm <- function(df, alpha_val=1, yname = "normy"){
+  yvar <- with(df, get(yname))
+  if(yname!='normy'){
+    mean1 <- mean(yvar)
+    sd1 <- sd(yvar)
+    yvar <-  (yvar - mean1)/sd1
+  }
+  
   alpha <- alpha_val #1 is LASSO and 0 is ridge
   dat.reg <- model.matrix(~species*context*P21L*A26T*L28R, data = df)
   dat.reg <- dat.reg[,-which(colnames(dat.reg) == "(Intercept)")]
   
   mycv <- cv.glmnet(x = dat.reg, 
-                    y = df$normy, 
+                    y = yvar, 
                     nfolds = nrow(dat.reg), 
                     family='gaussian', 
                     alpha=alpha, 
@@ -65,7 +72,7 @@ longlm_abu <- run_long_lm(abu, myalpha)
 longlm_gro <- run_long_lm(gro, myalpha)
 
 #####
-# Lasso within Context+Species (aka "cs models", "Rafael's models", "profiles")
+# Lasso within Context+Species
 #####
 one_cs_lm <-function(df, alpha_val=1, yvar = 'y') {
   
@@ -94,11 +101,11 @@ one_cs_lm <-function(df, alpha_val=1, yvar = 'y') {
   tibble(term = rownames(coefs), coef = unname(coefs[,1]) )%>% arrange(desc(abs(coef)))
 }
 
-run_cs_lm <- function(df, alpha=1){
+run_cs_lm <- function(df, alpha=1, ...){
   df %>% 
     group_by(species, context)%>%
     nest(.key = vals)%>%
-    mutate(model = map(vals, one_cs_lm, alpha_val=alpha))%>%
+    mutate(model = map(vals, one_cs_lm, alpha_val=alpha, ...))%>%
     unnest(model)%>%
     filter(term !="(Intercept)")%>%
     mutate(term = str_replace_all(term, "1:",":"),

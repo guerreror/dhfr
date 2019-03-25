@@ -4,7 +4,7 @@ library(tidyverse)
 ## load data
 ######
 read_single_sheet <- function(x, f){
-  readxl::read_xlsx(f, sheet = x) %>% dplyr::rename(X__0 = Replicates)
+  readxl::read_xlsx(f, sheet = x) 
 }
 
 # read all phenotypic data, includes IC50
@@ -29,7 +29,7 @@ get_refbar <- function(df, ph, sp, ctx, bin, x = "logW"){
 } 
 
 allphenos <- raw_data %>%
-  gather(key = 'rep', value='W', contains("X_"))%>%
+  gather(key = 'rep', value='W', starts_with("Rep"))%>%
   mutate(rep = NULL)%>%
   bind_rows(., grodata)%>%
   mutate(logW = log10(W))%>%
