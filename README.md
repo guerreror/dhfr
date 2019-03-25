@@ -2,7 +2,7 @@ Epistasis for antibiotic resistance
 ===================================
 
 
-This code runs the analyses described in Guerrero __et al__. (2019) "Proteostasis environment shapes higher-order epistasis operating on antibiotic resistance". The goal is to infer interactions acting on three phenotypes measured for nine strains of __E. coli__ (including transgenic strains and evolved mutants).
+This code runs the analyses described in Guerrero _et al_. (2019) "Proteostasis environment shapes higher-order epistasis operating on antibiotic resistance". The goal is to infer interactions acting on three phenotypes measured for nine strains of __E. coli__ (including transgenic strains and evolved mutants).
 
 The analyses use functions from the `glm.net` and `tidyverse` packages. The plots call functions from `treemapify` and `cowplot`.
 
@@ -10,7 +10,7 @@ Load data
 ---------
 The script `ms1_load_data.R` reads two data files ('GGG Whole Raw Set Clean.xlsx' and 'zero_growth_rate_reps.csv') carries out basic transformations. The `allphenos` data frame contains all the data for downstream analysis, coded in the following columns: 
 'context'-- one of three proteostasis environments (WT, GroEL, lon). 
-'species'-- one of three DHFR backbones, from __E.coli__, __C. muridarum__, or __L. grayi__.
+'species'-- one of three DHFR backbones, from _E.coli_, _C. muridarum_, or _L. grayi_.
 'binary'-- the haplotype at the three sites of interest (coded from 000 to 111)
 'pheno'-- the type of phenotype (IC50, abundance, or growth)
 'W'-- the value of the phenotype
